@@ -25,7 +25,11 @@ class Game {
      */
     public function addPlayer(string $name): void {
 
-        // TODO check if player exists
+        // Check if player exists
+        if (in_array($name, $this->collectPlayersNames())) {
+            $this->log("Player '$name' already exists");
+            return;
+        }
 
         $this->players[] = new Player($name);
         $this->log("current players: " . $this->extractPlayersName());
@@ -35,24 +39,28 @@ class Game {
      * @return string[]
      */
     public function collectPlayersNames(): array {
-
+        return array_map(
+            function(Player $player) {
+                return $player->getName();
+            },
+            $this->players
+        );
     }
+
+    public function throwDice(): int {
+        
+    } 
 
     private function extractPlayersName(): string 
     {
         return implode(
             ', ',
-            array_map(
-                function(Player $player) {
-                    return $player->getName();
-                },
-                $this->players
-            )
+            $this->collectPlayersNames()
         );
     }
 
     private function log(string $text): void {
-        echo "- $text\n";
+        echo "> $text\n";
     }
 }
 
